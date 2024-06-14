@@ -61,170 +61,24 @@ class MqttPsuedoBridge(Node):
 
         # Define topics to connect with (TODO: move this to read from yaml config file)
         self.topics = {
-            'topological_map_2': {
-                'source':'server',
+            'estimated_node': {
+                'source':'robot',
                 'namespace_robot': '/',
                 'namespace_mqtt': '',
                 'namespace_server': '/',
-                #'namespace_server': '/restricted_topological_map_generators/',
                 'type_robot': 'std_msgs/String',
                 'type_server': 'std_msgs/String',  #There is some bug with this part, data no exist?
                 'type': String
             },
-            'rasberry_coordination/dynamic_fleet/add_agent': { # commenting out as this hasn't been transferred across to ROS2 hunter yet..
+            'current_prob_dist': { # commenting out as this hasn't been transferred across to ROS2 hunter yet..
                 'source':'robot',
                 'namespace_robot': '/',
                 'namespace_mqtt': '',
                 'namespace_server': '/',
-                'type_robot': 'gofar_navigation/NewAgentConfig',
-                'type_server': 'rasberry_coordination/NewAgentConfig',
-                'type': NewAgentConfig
-            },
-            'topological_navigation/execute_policy_mode/goal': { # commented out for testing
-                'source':'server',
-                'namespace_robot': '/',
-                'namespace_mqtt': self.robot_name+'<<rn>>/',
-                'namespace_server': '/'+self.robot_name+'<<rn>>/',
-                'type_robot': 'topological_navigation_msgs/ExecutePolicyModeActionGoal',
-                'type_server': 'topological_navigation_msgs/ExecutePolicyModeActionGoal', #previously strands_navigation_msgs/ExecutePolicyModeActionGoal
-                'type': ExecutePolicyModeGoal
-            },
-            'topological_navigation/execute_policy_mode/cancel': {
-                'source':'server',
-                'namespace_robot': '/',
-                'namespace_mqtt': self.robot_name+'<<rn>>/',
-                'namespace_server': '/'+self.robot_name+'<<rn>>/',
-                'type_robot': 'actionlib_msgs/GoalID',
-                'type_server': 'actionlib_msgs/GoalID',
-                'type': GoalID
-            },
-            'topological_navigation/goal': { #AMMENDED msg type NOT WORKING
-                'source':'server',
-                'namespace_robot': '/',
-                'namespace_mqtt': self.robot_name+'<<rn>>/',
-                'namespace_server': '/'+self.robot_name+'<<rn>>/',
-                'type_robot': 'topological_navigation_msgs/GotoNode', #previously 'topological_navigation_msgs/GotoNodeActionGoal'
-                'type_server': 'topological_navigation_msgs/GotoNode', #previously 'topological_navigation_msgs/GotoNodeActionGoal' from strands_navigation_msgs/GotoNodeActionGoal
-                'type': GotoNode
-            },
-            'topological_navigation/cancel': {
-                'source':'server',
-                'namespace_robot': '/',
-                'namespace_mqtt': self.robot_name+'<<rn>>/',
-                'namespace_server': '/'+self.robot_name+'<<rn>>/',
-                'type_robot': 'actionlib_msgs/GoalID',
-                'type_server': 'actionlib_msgs/GoalID',
-                'type': GoalID
-            },
-#            'ui/speaker': { # commenting out as this doesn't exist in ROS2 hunter
-#                'source':'server',
-#                'namespace_robot': '/',
-#                'namespace_mqtt': self.robot_name+'<<rn>>/',
-#                'namespace_server': '/'+self.robot_name+'<<rn>>/',
-#                'type_robot': 'std_msgs/String',
-#                'type_server': 'std_msgs/String',
-#                'type': String
-#            },
-            'current_node': { # commented out for testing
-                'source':'robot',
-                'namespace_robot': '/',
-                'namespace_mqtt': self.robot_name+'<<rn>>/',
-                'namespace_server': '/'+self.robot_name+'<<rn>>/',
-                'type_robot': 'std_msgs/String',
-                'type_server': 'std_msgs/String',
-                'type': String
-            },
-            'closest_node': { #commented out for testing
-                'source':'robot',
-                'namespace_robot': '/',
-                'namespace_mqtt': self.robot_name+'<<rn>>/',
-                'namespace_server': '/'+self.robot_name+'<<rn>>/',
-                'type_robot': 'std_msgs/String',
-                'type_server': 'std_msgs/String',
-                'type': String
-            },
-#            'topological_navigation/execute_policy_mode/feedback': {
-#                'source':'robot',
-#                'namespace_robot': '/',
-#                'namespace_mqtt': self.robot_name+'<<rn>>/',
-#                'namespace_server': '/'+self.robot_name+'<<rn>>/',
-#                'type_robot': 'topological_navigation_msgs/ExecutePolicyModeActionFeedback',
-#                'type_server': 'strands_navigation_msgs/ExecutePolicyModeActionFeedback',
-#                'type': ExecutePolicyModeActionFeedback
-#            },
-#            'topological_navigation/execute_policy_mode/result': {
-#                'source':'robot',
-#                'namespace_robot': '/',
-#                'namespace_mqtt': self.robot_name+'<<rn>>/',
-#                'namespace_server': '/'+self.robot_name+'<<rn>>/',
-#                'type_robot': 'topological_navigation_msgs/ExecutePolicyModeActionResult',
-#                'type_server': 'strands_navigation_msgs/ExecutePolicyModeActionResult',
-#                'type': ExecutePolicyModeActionResult
-#            },
-#            'topological_navigation/execute_policy_mode/status': {
-#                'source':'robot',
-#                'namespace_robot': '/',
-#                'namespace_mqtt': self.robot_name+'<<rn>>/',
-#                'namespace_server': '/'+self.robot_name+'<<rn>>/',
-#                'type_robot': 'actionlib_msgs/GoalStatusArray',
-#                'type_server': 'actionlib_msgs/GoalStatusArray',
-#                'type': GoalStatusArray
-#            },
-#            'topological_navigation/feedback': {
-#                'source':'robot',
-#                'namespace_robot': '/',
-#                'namespace_mqtt': self.robot_name+'<<rn>>/',
-#                'namespace_server': '/'+self.robot_name+'<<rn>>/',
-#                'type_robot': 'topological_navigation_msgs/GotoNodeActionFeedback',
-#                'type_server': 'strands_navigation_msgs/GotoNodeActionFeedback',
-#                'type': GotoNodeActionFeedback
-#            },
-#            'topological_navigation/result': {
-#                'source':'robot',
-#                'namespace_robot': '/',
-#                'namespace_mqtt': self.robot_name+'<<rn>>/',
-#                'namespace_server': '/'+self.robot_name+'<<rn>>/',
-#                'type_robot': 'topological_navigation_msgs/GotoNodeActionResult',
-#                'type_server': 'strands_navigation_msgs/GotoNodeActionResult',
-#                'type': GotoNodeActionResult
-#            },
-#            'topological_navigation/status': {
-#                'source':'robot',
-#                'namespace_robot': '/',
-#                'namespace_mqtt': self.robot_name+'<<rn>>/',
-#                'namespace_server': '/'+self.robot_name+'<<rn>>/',
-#                'type_robot': 'actionlib_msgs/GoalStatusArray',
-#                'type_server': 'actionlib_msgs/GoalStatusArray',
-#                'type': GoalStatusArray
-#            },
-#            'han/balance_data': { # commented out as this doesn't exist in ROS2 hunter..
-#                'source':'robot',
-#                'namespace_robot': '/',
-#                'namespace_mqtt': self.robot_name+'<<rn>>/',
-#                'namespace_server': '/'+self.robot_name+'<<rn>>/',
-#                'type_robot': 'std_msgs/Float32',
-#                'type_server': 'std_msgs/Float32',
-#                'type': Float32
-#            },
-#            'robot_pose': {
-            'odometry/global': {
-                'source':'robot',
-                'namespace_robot': '/',
-                'namespace_mqtt': self.robot_name+'<<rn>>/',
-                'namespace_server': '/'+self.robot_name+'<<rn>>/',
-                'type_robot': 'geometry_msgs/Pose',
-                'type_server': 'geometry_msgs/Pose',
-                'type': Odometry
-            },
-#            'tf': { #not needed, just for testing
-#                'source':'robot',
-#                'namespace_robot': '/',
-#                'namespace_mqtt': self.robot_name+'<<rn>>/',
-#                'namespace_server': '/'+self.robot_name+'<<rn>>/',
-#                'type_robot': 'tf',
-#                'type_server': 'tf',
-#                'type': TFMessage
-#            },
+                'type_robot': 'bayesian_topological_localisation_msgs.msg/DistributionStamped',
+                'type_server': 'bayesian_topological_localisation_msgs.msg/DistributionStamped',
+                'type': DistributionStamped
+            }
         }
 
         self.mqtt_topics = dict()
